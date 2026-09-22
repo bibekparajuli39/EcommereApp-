@@ -11,7 +11,7 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(automaticallyImplyLeading: true, title: Text('Cart')),
+      appBar: AppBar(title: Text('Cart')),
       body: SingleChildScrollView(
         child: Column(
           children: [

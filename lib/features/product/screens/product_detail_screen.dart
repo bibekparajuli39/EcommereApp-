@@ -18,7 +18,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           onPressed: () {
             context.go(Routes.home);
           },
-          icon: const Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back),
         ),
         title: Text(''),
       ),
@@ -55,66 +55,136 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 Text('(200 review)'),
               ],
             ),
-            Text(
-              'Description',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              'Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday',
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(color: const Color.fromARGB(255, 132, 128, 128)),
-            ),
-            Spacer(),
 
-            Row(
-              spacing: 15,
-              children: [
-                Container(
-                  height: 50,
-                  width: 130,
-
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(32),
-                    border: BoxBorder.all(width: 1),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(18),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Colors.grey.shade200, width: 1),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.08),
+                    blurRadius: 12,
+                    spreadRadius: 1,
+                    offset: const Offset(0, 5),
                   ),
-                  child: Row(
-                    spacing: 10,
-                    crossAxisAlignment: .center,
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
                     children: [
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.remove, size: 20),
+                      Container(
+                        width: 4,
+                        height: 24,
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
 
-                      Text('1'),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.add, size: 20),
+                      SizedBox(width: 10),
+
+                      Text(
+                        'Description',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ),
-                ),
 
-                InkWell(
-                  onTap: () {},
-                  child: Container(
-                    height: 50,
-                    width: 199,
-                    padding: EdgeInsets.symmetric(horizontal: 60, vertical: 13),
+                  SizedBox(height: 12),
 
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(32),
-                      border: BoxBorder.all(width: 1),
-                      color: Colors.black,
-                    ),
-                    child: Text(
-                      'Add to Cart',
-                      style: TextStyle(color: Colors.white),
+                  Text(
+                    'Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday.',
+                    style: TextStyle(
+                      fontSize: 14,
+                      height: 1.6,
+                      color: Colors.grey.shade600,
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
+            ),
+
+            Spacer(),
+
+            Container(
+              padding: EdgeInsets.only(top: 12, bottom: 12),
+              color: Color(0xfff8f9fb),
+              child: Row(
+                children: [
+                  // Quantity
+                  Container(
+                    height: 52,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(28),
+                      border: Border.all(color: Colors.grey.shade300),
+                    ),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {},
+                          icon: Icon(Icons.remove, size: 18),
+                        ),
+
+                        Text(
+                          '1',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+
+                        IconButton(
+                          onPressed: () {},
+                          icon: Icon(Icons.add, size: 18),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  SizedBox(width: 12),
+
+                  // Add to Cart
+                  Expanded(
+                    child: SizedBox(
+                      height: 52,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromARGB(255, 0, 0, 0),
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(28),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.shopping_cart_outlined, size: 20),
+                            SizedBox(width: 8),
+                            Text(
+                              'Add to Cart',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
