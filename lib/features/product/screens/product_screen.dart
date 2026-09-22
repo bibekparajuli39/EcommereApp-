@@ -1,4 +1,6 @@
+import 'package:app_project/core/routes/route.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class ProductScreen extends StatefulWidget {
   const ProductScreen({super.key});
@@ -10,83 +12,151 @@ class ProductScreen extends StatefulWidget {
 class _ProductScreenState extends State<ProductScreen> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 100,
-
-      child: GridView.builder(
-        itemCount: 10,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 8.0, // Horizontal spacing between product
-          mainAxisSpacing: 8.0, // Vertical spacing between product
-          childAspectRatio: 0.8,
-        ),
-        itemBuilder: (context, index) {
-          return Container(
-            decoration: BoxDecoration(
-              border: Border.all(width: 1),
-              borderRadius: BorderRadius.circular(22),
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 2),
-                  blurRadius: 10,
-                  offset: Offset(0, 4),
-                ),
-              ],
+    return SafeArea(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(left: 20, bottom: 10),
+            child: Text(
+              'Products',
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
-            margin: EdgeInsets.all(10),
-            child: ClipRRect(
-              borderRadius: BorderRadiusGeometry.circular(22),
-              child: Column(
-                crossAxisAlignment: .start,
+          ),
 
-                children: [
-                  Center(
-                    child: Image.network(
-                      'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_t.png',
-                      height: 120,
-                      width: 90,
-
-                      fit: BoxFit.fill,
-                    ),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: 10,
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 15,
+              mainAxisSpacing: 18,
+              childAspectRatio: 0.57,
+            ),
+            itemBuilder: (context, index) {
+              return InkWell(
+                borderRadius: BorderRadius.circular(18),
+                onTap: () {
+                  context.go(Routes.productDetail);
+                },
+                child: Card(
+                  elevation: 3,
+                  margin: EdgeInsets.zero,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18),
                   ),
-                  Padding(
-                    padding: EdgeInsetsGeometry.all(10),
-                    child: Column(
-                      crossAxisAlignment: .start,
-                      children: [
-                        Row(
-                          children: [
-                            Column(
-                              crossAxisAlignment: .start,
-                              children: [
-                                Text(
-                                  'title',
-                                  style: TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text('price'),
-                                Text('description'),
-                              ],
+                  clipBehavior: Clip.antiAlias,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Image
+                      Expanded(
+                        flex: 5,
+                        child: Container(
+                          width: double.infinity,
+                          decoration: const BoxDecoration(
+                            image: DecorationImage(
+                              image: NetworkImage(
+                                'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_t.png',
+                              ),
+                              fit: BoxFit.contain,
                             ),
-                            Spacer(),
-                            IconButton(
-                              onPressed: () {},
-                              icon: Icon(Icons.shopping_cart),
-                            ),
-                          ],
+                          ),
                         ),
-                      ],
-                    ),
+                      ),
+
+                      Expanded(
+                        flex: 4,
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(12, 8, 8, 8),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Fjallraven - Foldsack No. 1 Backpack',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+
+                              SizedBox(height: 5),
+
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.star,
+                                    size: 16,
+                                    color: Colors.amber,
+                                  ),
+                                  SizedBox(width: 3),
+                                  Text(
+                                    '4.9',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  SizedBox(width: 3),
+                                  Text(
+                                    '(200)',
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      color: Colors.grey.shade600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                              Spacer(),
+
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    '\$109.95',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+
+                                  Container(
+                                    height: 36,
+                                    width: 36,
+                                    decoration: BoxDecoration(
+                                      color: Colors.blue,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: IconButton(
+                                      padding: EdgeInsets.zero,
+                                      onPressed: () {},
+                                      icon: Icon(
+                                        Icons.shopping_cart_outlined,
+                                        size: 19,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-          );
-        },
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }

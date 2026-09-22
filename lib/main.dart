@@ -1,4 +1,4 @@
-import 'package:app_project/routes/app_routes.dart';
+import 'package:app_project/core/routes/app_routes.dart';
 
 import 'package:flutter/material.dart';
 
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      // home: Onboarding(),
+
       routerConfig: AppRoutes.router,
     );
   }

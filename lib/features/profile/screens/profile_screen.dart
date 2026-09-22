@@ -1,4 +1,4 @@
-import 'package:app_project/routes/route.dart';
+import 'package:app_project/core/routes/route.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -14,93 +14,113 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Profile')),
-      body: Column(
-        crossAxisAlignment: .start,
-        spacing: 5,
-        children: [
-          Center(
-            child: Column(
-              children: [
-                CircleAvatar(
-                  radius: 50,
-                  backgroundImage: NetworkImage(
-                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkHpbyaPU2ALxd1HsLes7GoSOOPVRMyH8-BsNSgBThWQ&s=10',
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: .center,
-                  spacing: 10,
-                  children: [
-                    InkWell(
-                      child: Text(
-                        'Edit',
-                        style: TextStyle(color: Colors.blueAccent),
-                      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Column(
+                children: [
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundImage: NetworkImage(
+                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkHpbyaPU2ALxd1HsLes7GoSOOPVRMyH8-BsNSgBThWQ&s=10',
                     ),
-                    InkWell(
-                      child: Text(
-                        'Delete',
-                        style: TextStyle(color: Colors.redAccent),
-                      ),
-                    ),
-                  ],
-                ),
-                Text('Name'),
-                Text('Email'),
-              ],
-            ),
-          ),
-          Spacer(),
-
-          Padding(
-            padding: EdgeInsetsGeometry.only(top: 40, left: 10),
-            child: Column(
-              crossAxisAlignment: .start,
-              children: [
-                Text(
-                  'My Orders',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                ),
-
-                Container(
-                  padding: EdgeInsets.only(right: 20),
-                  height: 350,
-                  child: ListView(
-                    children: [
-                      Card(
-                        child: ListTile(
-                          title: Text('Profile'),
-                          subtitle: Text('Add/Edit/Delete'),
-                        ),
-                      ),
-                      Card(
-                        child: ListTile(
-                          title: Text('Wishlist'),
-                          subtitle: Text('Add/Edit/Delete'),
-                          onTap: () {
-                            context.go(Routes.cart);
-                          },
-                        ),
-                      ),
-                      Card(
-                        child: ListTile(
-                          title: Text('Address'),
-                          subtitle: Text('Add/Edit/Delete'),
-                        ),
-                      ),
-                      Card(
-                        child: ListTile(
-                          title: Text('Orders'),
-                          subtitle: Text('Add/Edit/Delete'),
-                        ),
-                      ),
-                    ],
                   ),
-                ),
-              ],
+
+                  SizedBox(height: 10),
+
+                  Text(
+                    'Name',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+
+                  Text('Email'),
+                ],
+              ),
             ),
-          ),
-        ],
+
+            SizedBox(height: 30),
+
+            // Menu section
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: Text(
+                'My Account',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
+            ),
+
+            SizedBox(height: 10),
+
+            Card(
+              elevation: 3,
+              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              child: ListTile(
+                leading: Icon(Icons.person),
+                title: Text('Profile'),
+                subtitle: Text('Add/Edit/Delete'),
+              ),
+            ),
+
+            Card(
+              elevation: 3,
+              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              child: ListTile(
+                leading: Icon(Icons.favorite),
+                title: Text('Wishlist'),
+                subtitle: Text('View your wishlist'),
+                onTap: () {
+                  context.go(Routes.cart);
+                },
+              ),
+            ),
+
+            Card(
+              elevation: 3,
+              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              child: ListTile(
+                leading: Icon(Icons.location_on),
+                title: Text('Address'),
+                subtitle: Text('Add/Edit/Delete'),
+              ),
+            ),
+
+            Card(
+              elevation: 3,
+              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              child: ListTile(
+                leading: Icon(Icons.shopping_bag),
+                title: Text('My Orders'),
+                subtitle: Text('View your orders'),
+              ),
+            ),
+
+            Card(
+              elevation: 3,
+              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              child: ListTile(
+                leading: Icon(Icons.settings),
+                title: Text('Settings'),
+                subtitle: Text('Manage your account'),
+              ),
+            ),
+
+            Card(
+              elevation: 3,
+              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              child: ListTile(
+                leading: Icon(Icons.logout),
+                title: Text('Logout'),
+                onTap: () {
+                  // Logout
+                },
+              ),
+            ),
+
+            SizedBox(height: 20),
+          ],
+        ),
       ),
     );
   }

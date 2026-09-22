@@ -1,5 +1,6 @@
 import 'package:app_project/core/constants/app_assets.dart';
-import 'package:app_project/routes/route.dart';
+import 'package:app_project/core/routes/route.dart';
+import 'package:app_project/features/services/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -27,13 +28,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     super.dispose();
   }
 
+  Future<void> finishOnboarding() async {
+    await PreferencesService.setOnboardingSeen();
+
+    if (!mounted) return;
+
+    context.go(Routes.signup);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
-            // Using PageView.builder
+            // PageView
             Expanded(
               child: PageView.builder(
                 controller: _pageController,
@@ -45,7 +54,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 },
                 itemBuilder: (context, index) {
                   return Padding(
-                    padding: const EdgeInsets.all(20),
+                    padding: EdgeInsets.all(20),
                     child: Image.asset(
                       onboardingImages[index],
                       fit: BoxFit.contain,
@@ -55,7 +64,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
 
-            // Dots for slider
+            // Dots
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -95,32 +104,48 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             SizedBox(height: 30),
 
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: SizedBox(
-                width: 150,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (currentPage < onboardingImages.length - 1) {
-                      _pageController.nextPage(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut,
-                      );
-                    } else {
-                      context.go(Routes.signup);
-                      print('Onboarding finished');
-                    }
-                  },
-                  child: Text(
-                    currentPage == onboardingImages.length - 1
-                        ? 'Get Started'
-                        : 'Next',
-                  ),
-                ),
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  if (currentPage == onboardingImages.length - 1)
+                    InkWell(
+                      onTap: finishOnboarding,
+                      child: Text(
+                        'Get Started',
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Color.fromARGB(255, 21, 97, 228),
+                        ),
+                      ),
+                    )
+                  else
+                    SizedBox(),
+
+                  // Next
+                  if (currentPage < onboardingImages.length - 1)
+                    InkWell(
+                      onTap: () {
+                        _pageController.nextPage(
+                          duration: Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                        );
+                      },
+                      child: Text(
+                        'Next',
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Color.fromARGB(255, 21, 97, 228),
+                        ),
+                      ),
+                    )
+                  else
+                    SizedBox(),
+                ],
               ),
             ),
 
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
           ],
         ),
       ),

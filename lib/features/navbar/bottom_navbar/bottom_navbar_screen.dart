@@ -1,5 +1,5 @@
 import 'package:app_project/features/cart/screens/cart_screen.dart';
-import 'package:app_project/features/home/screen/home_screen.dart';
+import 'package:app_project/features/home/screens/home_screen.dart';
 
 import 'package:app_project/features/profile/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
@@ -25,10 +25,16 @@ class _BottomNavbarState extends State<BottomNavbar> {
           setState(() {});
         },
         destinations: [
-          NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
+          NavigationDestination(icon: Icon(Icons.home_outlined), label: 'Home'),
 
-          NavigationDestination(icon: Icon(Icons.shopping_bag), label: 'Cart'),
-          NavigationDestination(icon: Icon(Icons.person), label: 'Profile'),
+          NavigationDestination(
+            icon: Icon(Icons.shopping_bag_outlined),
+            label: 'Cart',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person_outline),
+            label: 'Profile',
+          ),
         ],
       ),
       // BottomNavigationBar(

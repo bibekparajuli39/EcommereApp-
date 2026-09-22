@@ -1,6 +1,6 @@
-import 'package:app_project/routes/app_routes.dart';
-import 'package:app_project/routes/route.dart';
+import 'package:app_project/core/routes/route.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -47,7 +47,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(22),
                 ),
-                hint: Text('Username'),
+                hint: Text('Email'),
 
                 prefixIcon: Icon(Icons.email),
               ),
@@ -93,6 +93,33 @@ class _SignupScreenState extends State<SignupScreen> {
                   'Sign Up',
                   style: TextStyle(color: Colors.white, fontSize: 22),
                 ),
+              ),
+            ),
+            SizedBox(height: 10),
+
+            Row(
+              spacing: 10,
+              children: [
+                const Expanded(
+                  child: Divider(color: Colors.grey, thickness: 1),
+                ),
+                const Text('Or'),
+                const Expanded(
+                  child: Divider(color: Colors.grey, thickness: 1),
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Center(
+              child: Column(
+                children: [
+                  FaIcon(
+                    FontAwesomeIcons.google,
+                    size: 40,
+                    color: Colors.green,
+                  ),
+                  Text('Google'),
+                ],
               ),
             ),
           ],
