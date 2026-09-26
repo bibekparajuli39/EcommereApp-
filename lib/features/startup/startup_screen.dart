@@ -26,7 +26,7 @@ class _StartupScreenState extends State<StartupScreen> {
 
     if (onboardingSeen) {
       // Second time when i visit
-      context.go(Routes.signup);
+      context.go(Routes.auth);
     } else {
       // First time when i visit
       context.go(Routes.onboarding);

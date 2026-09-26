@@ -1,5 +1,6 @@
 import 'package:app_project/core/routes/route.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -11,23 +12,16 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool isVisible = true;
+  bool login = true;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        margin: EdgeInsets.all(20),
+    return SingleChildScrollView(
+      child: Container(
         padding: EdgeInsets.all(22),
         child: Column(
           crossAxisAlignment: .start,
           mainAxisAlignment: .center,
           children: [
-            Center(
-              child: Text(
-                'Welcome to Login',
-                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-              ),
-            ),
-            SizedBox(height: 20),
             Text('Email'),
             TextFormField(
               decoration: InputDecoration(
@@ -80,6 +74,33 @@ class _LoginScreenState extends State<LoginScreen> {
                   'Login',
                   style: TextStyle(color: Colors.white, fontSize: 22),
                 ),
+              ),
+            ),
+            SizedBox(height: 10),
+
+            Row(
+              spacing: 10,
+              children: [
+                const Expanded(
+                  child: Divider(color: Colors.grey, thickness: 1),
+                ),
+                const Text('Or'),
+                const Expanded(
+                  child: Divider(color: Colors.grey, thickness: 1),
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Center(
+              child: Column(
+                children: [
+                  FaIcon(
+                    FontAwesomeIcons.google,
+                    size: 40,
+                    color: Colors.green,
+                  ),
+                  Text('Google'),
+                ],
               ),
             ),
           ],

@@ -1,14 +1,20 @@
 import 'package:app_project/core/routes/route.dart';
+import 'package:app_project/features/auth/screens/auth_screen.dart';
+
 import 'package:app_project/features/auth/screens/login_screen.dart';
 import 'package:app_project/features/auth/screens/signup_screen.dart';
 import 'package:app_project/features/cart/screens/cart_screen.dart';
 import 'package:app_project/features/navbar/bottom_navbar/bottom_navbar_screen.dart';
 import 'package:app_project/features/onboarding/screens/onboarding.dart';
+
+import 'package:app_project/features/product/models/product_model/product_model.dart';
+
 import 'package:app_project/features/product/screens/product_detail_screen.dart';
 import 'package:app_project/features/product/screens/product_screen.dart';
 import 'package:app_project/features/startup/startup_screen.dart';
 
 import 'package:flutter/material.dart';
+
 import 'package:go_router/go_router.dart';
 
 class AppRoutes {
@@ -47,14 +53,29 @@ class AppRoutes {
           return const LoginScreen();
         },
       ),
+      GoRoute(
+        path: Routes.auth,
+        builder: (BuildContext context, GoRouterState state) {
+          return const AuthScreen();
+        },
+      ),
 
       // Home
       GoRoute(
         path: Routes.home,
-        builder: (BuildContext context, GoRouterState state) {
+        builder: (context, state) {
           return const BottomNavbar();
         },
       ),
+
+      // builder: (context, state) {
+      //     return BlocProvider(
+      //       create: (context) =>
+      //           ProductBloc(ProudctRepository(ApiService()))
+      //             ..add(GetProducts()),
+      //       child: const ProductScreen(),
+      //     );
+      //   },
 
       // Product
       GoRoute(
@@ -62,20 +83,37 @@ class AppRoutes {
         builder: (BuildContext context, GoRouterState state) {
           return const ProductScreen();
         },
+
+        // builder: (context, state) {
+        //     return BlocProvider(
+        //       create: (context) => ProductBloc(
+        //         // repository/usecase here
+        //       )..add(FetchProducts()),
+        //       child: const ProductScreen(),
+        //     );
+        //   },
       ),
 
       // Cart
       GoRoute(
         path: Routes.cart,
         builder: (BuildContext context, GoRouterState state) {
-          return const CartScreen();
+          // final product = state.extra as ProductModel;
+          return CartScreen();
         },
       ),
       // Onboarding
       GoRoute(
         path: Routes.productDetail,
         builder: (BuildContext context, GoRouterState state) {
-          return const ProductDetailScreen();
+          final products = state.extra as ProductModel?;
+          if (products == null) {
+            return const Scaffold(
+              body: Center(child: Text('Product not found')),
+            );
+          }
+
+          return ProductDetailScreen(product: products);
         },
       ),
     ],
