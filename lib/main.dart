@@ -1,5 +1,7 @@
 import 'package:app_project/core/routes/app_routes.dart';
 import 'package:app_project/core/services/api_service.dart';
+import 'package:app_project/features/auth/bloc/auth_bloc.dart';
+import 'package:app_project/features/auth/repositories/auth_repositories.dart';
 import 'package:app_project/features/cart/bloc/cart_bloc.dart';
 import 'package:app_project/features/cart/bloc/cart_event.dart';
 import 'package:app_project/features/cart/repositories/cart_repositories.dart';
@@ -13,6 +15,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 @pragma('vm:entry-point')
 Future<void> _backgroundHandler(RemoteMessage message) async {
@@ -22,9 +25,12 @@ Future<void> _backgroundHandler(RemoteMessage message) async {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await GoogleSignIn.instance.initialize();
   runApp(
     MultiBlocProvider(
       providers: [
+        // auth
+        BlocProvider(create: (_) => AuthBloc(AuthRepositories())),
         // Cart BLoC
         BlocProvider(
           create: (context) => CartBloc(CartRepositories())..add(LoadCart()),
@@ -39,6 +45,7 @@ void main() async {
       child: const MyApp(),
     ),
   );
+
   // calling initialize for local notification
   await initFLutterLocalNotification();
   await getFCMToken();

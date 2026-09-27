@@ -1,7 +1,10 @@
 import 'package:app_project/features/ad/image_ad.dart';
+import 'package:app_project/features/auth/bloc/auth_bloc.dart';
+import 'package:app_project/features/auth/bloc/auth_state.dart';
 import 'package:app_project/features/product/screens/product_screen.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,31 +19,41 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Row(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Hi, Bibek!',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  "Discover products you'll love",
-                  style: TextStyle(color: Colors.grey, fontSize: 14),
-                ),
-              ],
-            ),
+        title: BlocBuilder<AuthBloc, AuthState>(
+          builder: (context, state) {
+            if (state is AuthAuthenticated) {
+              return Row(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Hi, ${state.user!.displayName ?? "User"}!',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        "Discover products you'll love",
+                        style: TextStyle(color: Colors.grey, fontSize: 14),
+                      ),
+                    ],
+                  ),
 
-            Spacer(),
+                  Spacer(),
 
-            CircleAvatar(
-              radius: 25,
-              backgroundImage: NetworkImage(
-                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkHpbyaPU2ALxd1HsLes7GoSOOPVRMyH8-BsNSgBThWQ&s=10',
-              ),
-            ),
-          ],
+                  CircleAvatar(
+                    radius: 25,
+                    backgroundImage: state.user?.photoURL != null
+                        ? NetworkImage(state.user!.photoURL!)
+                        : null,
+                  ),
+                ],
+              );
+            }
+            return SizedBox();
+          },
         ),
       ),
 
