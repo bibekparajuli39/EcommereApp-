@@ -7,9 +7,11 @@ class AuthRepositories {
     // 1. login to google
     final GoogleSignInAccount googleUser = await GoogleSignIn.instance
         .authenticate();
+    print('Email: ${googleUser.email}');
 
     // 2. get google authentication
     final GoogleSignInAuthentication googleAuth = googleUser.authentication;
+    print('ID Token: ${googleAuth.idToken != null}');
 
     // 3. create firebase credential
     final credential = GoogleAuthProvider.credential(

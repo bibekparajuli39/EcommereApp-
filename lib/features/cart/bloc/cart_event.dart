@@ -1,4 +1,4 @@
-import 'package:app_project/features/product/models/product_model/product_model.dart';
+import 'package:nana/features/product/models/product/datum.dart';
 
 abstract class CartEvent {}
 
@@ -7,7 +7,7 @@ class LoadCart extends CartEvent {}
 // it added the item in cart
 
 class AddToCart extends CartEvent {
-  final ProductModel product;
+  final Datum product;
   final int quantity;
 
   AddToCart(this.product, {this.quantity = 1});

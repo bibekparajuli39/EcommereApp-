@@ -1,7 +1,7 @@
-import 'package:app_project/core/routes/route.dart';
-import 'package:app_project/features/auth/bloc/auth_bloc.dart';
-import 'package:app_project/features/auth/bloc/auth_event.dart';
-import 'package:app_project/features/auth/bloc/auth_state.dart';
+import 'package:nana/core/routes/route.dart';
+import 'package:nana/features/auth/bloc/auth_bloc.dart';
+import 'package:nana/features/auth/bloc/auth_event.dart';
+import 'package:nana/features/auth/bloc/auth_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -16,123 +16,280 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreenState extends State<SignupScreen> {
   bool isVisible = true;
+
+  static Color primaryColor = Color(0xFF6A3DE8);
+
   @override
   Widget build(BuildContext context) {
-    return BlocListener(
-      listener: (context, state) {
-        if (state is AuthAuthenticated) {
-          context.go(Routes.home);
-        }
-        if (state is AuthError) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(state.message.toString())));
-        }
-      },
-      child: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
+    return Scaffold(
+      backgroundColor: Color(0xFFFAF9FF),
+
+      body: SafeArea(
+        child: BlocListener<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is AuthAuthenticated) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Login successful'),
+                  backgroundColor: primaryColor,
+                  duration: Duration(seconds: 2),
+                ),
+              );
+              context.go(Routes.home);
+            }
+
+            if (state is AuthError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message.toString()),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          },
+          child: SingleChildScrollView(
             padding: EdgeInsets.all(22),
             child: Column(
-              crossAxisAlignment: .start,
-              mainAxisAlignment: .center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Username'),
-                TextFormField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(22),
-                    ),
-                    hint: Text('Username'),
+                SizedBox(height: 20),
 
-                    prefixIcon: Icon(Icons.person),
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: IconButton(
+                        onPressed: () {
+                          context.go(Routes.login);
+                        },
+                        icon: Icon(Icons.arrow_back, size: 28),
+                      ),
+                    ),
+
+                    // Logo
+                    Container(
+                      height: 80,
+                      width: 80,
+                      decoration: BoxDecoration(
+                        color: Color(0xFFF1ECFF),
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      child: Icon(
+                        Icons.shopping_bag_rounded,
+                        size: 45,
+                        color: primaryColor,
+                      ),
+                    ),
+                  ],
+                ),
+
+                SizedBox(height: 28),
+
+                Text(
+                  'Create Account',
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF171321),
                   ),
                 ),
-                SizedBox(height: 20),
-                Text('Email'),
+
+                SizedBox(height: 8),
+
+                Text(
+                  'Sign up to start your shopping journey.',
+                  style: TextStyle(fontSize: 15, color: Color(0xFF77727F)),
+                ),
+
+                SizedBox(height: 30),
+
+                // Username
+                Text('Name', style: TextStyle(fontWeight: FontWeight.w600)),
+                SizedBox(height: 8),
+
                 TextFormField(
                   decoration: InputDecoration(
+                    hintText: 'Enter your name',
+                    prefixIcon: Icon(Icons.person_outline, color: primaryColor),
+                    filled: true,
+                    fillColor: Colors.white,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(22),
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide.none,
                     ),
-                    hint: Text('Email'),
-
-                    prefixIcon: Icon(Icons.email),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide(color: Colors.white),
+                    ),
                   ),
                 ),
+
                 SizedBox(height: 20),
-                Text('Password'),
+
+                // Email
+                Text('Email', style: TextStyle(fontWeight: FontWeight.w600)),
+                SizedBox(height: 8),
+
+                TextFormField(
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    hintText: 'Enter your email',
+                    prefixIcon: Icon(Icons.email_outlined, color: primaryColor),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide(color: Colors.white),
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 20),
+
+                // Password
+                Text('Password', style: TextStyle(fontWeight: FontWeight.w600)),
+                SizedBox(height: 8),
+
                 TextFormField(
                   obscureText: isVisible,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(22),
-                    ),
-                    hint: Text('*********'),
-                    prefixIcon: Icon(Icons.password),
+                    hintText: 'Enter your password',
+                    prefixIcon: Icon(Icons.lock_outline, color: primaryColor),
                     suffixIcon: IconButton(
                       onPressed: () {
                         setState(() {
                           isVisible = !isVisible;
                         });
                       },
-                      icon: isVisible
-                          ? Icon(Icons.visibility)
-                          : Icon(Icons.visibility_off),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20),
-                Center(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.lightBlue,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadiusGeometry.circular(22),
+                      icon: Icon(
+                        isVisible
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
                       ),
-                      side: BorderSide.none,
-                      minimumSize: const Size(200, 50),
                     ),
-
-                    onPressed: () {
-                      context.go(Routes.login);
-                    },
-                    child: Text(
-                      'Sign Up',
-                      style: TextStyle(color: Colors.white, fontSize: 22),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide(color: Colors.white),
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
 
+                SizedBox(height: 28),
+
+                SizedBox(
+                  width: double.infinity,
+                  height: 56,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      context.go(Routes.home);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryColor,
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    child: Text(
+                      'Create Account',
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 25),
+
+                // Divider
                 Row(
-                  spacing: 10,
                   children: [
-                    const Expanded(
-                      child: Divider(color: Colors.grey, thickness: 1),
+                    Expanded(child: Divider(color: Colors.grey.shade300)),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      child: Text(
+                        'OR',
+                        style: TextStyle(color: Color(0xFF77727F)),
+                      ),
                     ),
-                    const Text('Or'),
-                    const Expanded(
-                      child: Divider(color: Colors.grey, thickness: 1),
-                    ),
+                    Expanded(child: Divider(color: Colors.grey.shade300)),
                   ],
                 ),
-                SizedBox(height: 20),
-                Center(
-                  child: InkWell(
-                    onTap: () {
+
+                SizedBox(height: 22),
+
+                // Google signup
+                SizedBox(
+                  width: double.infinity,
+                  height: 54,
+                  child: OutlinedButton(
+                    onPressed: () {
                       context.read<AuthBloc>().add(GoogleLogin());
                     },
-                    child: Column(
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: BorderSide(color: Colors.grey.shade300),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         FaIcon(
                           FontAwesomeIcons.google,
-                          size: 40,
-                          color: Colors.green,
+                          size: 19,
+                          color: Colors.red,
                         ),
-                        Text('Google'),
+                        SizedBox(width: 12),
+                        Text(
+                          'Continue with Google',
+                          style: TextStyle(
+                            color: Color(0xFF171321),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ],
                     ),
+                  ),
+                ),
+
+                SizedBox(height: 28),
+
+                Center(
+                  child: Wrap(
+                    alignment: WrapAlignment.center,
+                    children: [
+                      Text(
+                        'Already have an account? ',
+                        style: TextStyle(color: Color(0xFF77727F)),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          context.go(Routes.login);
+                        },
+                        child: Text(
+                          'Login',
+                          style: TextStyle(
+                            color: primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],

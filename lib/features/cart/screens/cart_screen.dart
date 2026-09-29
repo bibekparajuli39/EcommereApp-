@@ -1,6 +1,7 @@
-import 'package:app_project/features/cart/bloc/cart_bloc.dart';
-import 'package:app_project/features/cart/bloc/cart_event.dart';
-import 'package:app_project/features/cart/bloc/cart_state.dart';
+import 'package:nana/core/constants/theme_color.dart';
+import 'package:nana/features/cart/bloc/cart_bloc.dart';
+import 'package:nana/features/cart/bloc/cart_event.dart';
+import 'package:nana/features/cart/bloc/cart_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,7 +17,6 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     promocodeController.dispose();
   }
@@ -24,7 +24,9 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Cart')),
+      appBar: AppBar(
+        title: Text('My Cart', style: TextStyle(fontWeight: FontWeight.bold)),
+      ),
 
       body: BlocBuilder<CartBloc, CartState>(
         builder: (context, state) {
@@ -78,7 +80,7 @@ class _CartScreenState extends State<CartScreen> {
                               width: 90,
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 234, 224, 224),
+                                color: const Color(0xFFF5F2FF),
                                 borderRadius: BorderRadius.circular(15),
                               ),
                               child: Image.network(
@@ -128,7 +130,11 @@ class _CartScreenState extends State<CartScreen> {
                                       RemoveFromCart(item.product.id!),
                                     );
                                   },
-                                  icon: Icon(Icons.delete_outline, size: 21),
+                                  icon: Icon(
+                                    Icons.delete_outline,
+                                    size: 21,
+                                    color: Colors.redAccent,
+                                  ),
                                 ),
 
                                 Container(
@@ -137,7 +143,10 @@ class _CartScreenState extends State<CartScreen> {
 
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(22),
-                                    border: BoxBorder.all(width: 0.5),
+                                    border: Border.all(
+                                      width: 1,
+                                      color: const Color(0xFFE0E0E0),
+                                    ),
                                   ),
                                   child: Row(
                                     crossAxisAlignment: .center,
@@ -148,7 +157,11 @@ class _CartScreenState extends State<CartScreen> {
                                             DecreaseQuantity(item.product.id!),
                                           );
                                         },
-                                        icon: Icon(Icons.remove, size: 20),
+                                        icon: Icon(
+                                          Icons.remove,
+                                          size: 20,
+                                          color: ThemeColor.primaryColor,
+                                        ),
                                       ),
 
                                       Text(item.quantity.toString()),
@@ -158,7 +171,11 @@ class _CartScreenState extends State<CartScreen> {
                                             IncreaseQuantity(item.product.id!),
                                           );
                                         },
-                                        icon: Icon(Icons.add, size: 20),
+                                        icon: Icon(
+                                          Icons.add,
+                                          size: 20,
+                                          color: ThemeColor.primaryColor,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -171,7 +188,7 @@ class _CartScreenState extends State<CartScreen> {
                     },
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
 
                     child: TextFormField(
                       controller: promocodeController,
@@ -189,21 +206,41 @@ class _CartScreenState extends State<CartScreen> {
                         ),
                         hintText: 'Enter promo code',
                         suffixIcon: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: OutlinedButton(
+                          padding: EdgeInsets.all(6),
+                          child: ElevatedButton(
                             onPressed: () {
                               context.read<CartBloc>().add(
                                 PromoCode(promocodeController.text),
                               );
                             },
-                            child: Text('APPLY'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: ThemeColor.primaryColor,
+                              foregroundColor: Colors.white,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18),
+                              ),
+                            ),
+                            child: Text(
+                              'APPLY',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.all(20),
+                    margin: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(18),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF8F6FF),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: const Color(0xFFE8E0FF)),
+                    ),
                     child: Column(
                       spacing: 8,
                       children: [
@@ -267,6 +304,38 @@ class _CartScreenState extends State<CartScreen> {
                           ],
                         ),
                       ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(12, 5, 12, 20),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 52,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: ThemeColor.primaryColor,
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(28),
+                          ),
+                        ),
+                        onPressed: () {},
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Checkout',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                            Icon(Icons.arrow_forward, size: 20),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ],

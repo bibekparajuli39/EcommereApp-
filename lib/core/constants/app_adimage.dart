@@ -1,9 +1,9 @@
 class AppAdimage {
   AppAdimage._();
   static String imageOne =
-      'https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_t.png';
+      'https://images.pexels.com/photos/1183266/pexels-photo-1183266.jpeg';
   static String imageTwo =
-      'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_t.png';
+      'https://images.pexels.com/photos/2233703/pexels-photo-2233703.jpeg';
   static String imageThree =
-      'https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_t.png';
+      'https://images.pexels.com/photos/3363204/pexels-photo-3363204.jpeg';
 }

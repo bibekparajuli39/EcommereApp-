@@ -1,13 +1,15 @@
-import 'package:app_project/core/routes/route.dart';
-import 'package:app_project/features/cart/bloc/cart_bloc.dart';
-import 'package:app_project/features/cart/bloc/cart_event.dart';
-import 'package:app_project/features/product/models/product_model/product_model.dart';
+import 'package:nana/core/constants/theme_color.dart';
+import 'package:nana/core/routes/route.dart';
+import 'package:nana/features/cart/bloc/cart_bloc.dart';
+import 'package:nana/features/cart/bloc/cart_event.dart';
+import 'package:nana/features/product/models/product/datum.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class ProductDetailScreen extends StatefulWidget {
-  final ProductModel product;
+  final Datum product;
   const ProductDetailScreen({super.key, required this.product});
 
   @override
@@ -54,7 +56,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
                       ),
-                      maxLines: 1,
+                      maxLines: 4,
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
@@ -68,8 +70,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       spacing: 5,
                       children: [
                         Icon(Icons.star, color: Colors.orange),
-                        Text('${widget.product.rating!.rate}'),
-                        Text('(${widget.product.rating!.count} review)'),
+                        Text('${widget.product.rating}'),
+                        // ${widget.product.rating!.count}
+                        Text('( review)'),
                       ],
                     ),
 
@@ -101,7 +104,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 width: 4,
                                 height: 24,
                                 decoration: BoxDecoration(
-                                  color: Colors.blue,
+                                  color: ThemeColor.primaryColor,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                               ),
@@ -192,9 +195,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             context.read<CartBloc>().add(
                               AddToCart(widget.product, quantity: quantity),
                             );
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: ThemeColor.primaryColor,
+                                content: Text(
+                                  'Successfully Added to Cart',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            );
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(255, 0, 0, 0),
+                            backgroundColor: ThemeColor.primaryColor,
                             foregroundColor: Colors.white,
                             elevation: 0,
                             shape: RoundedRectangleBorder(

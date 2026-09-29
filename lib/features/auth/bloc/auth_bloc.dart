@@ -1,6 +1,6 @@
-import 'package:app_project/features/auth/bloc/auth_event.dart';
-import 'package:app_project/features/auth/bloc/auth_state.dart';
-import 'package:app_project/features/auth/repositories/auth_repositories.dart';
+import 'package:nana/features/auth/bloc/auth_event.dart';
+import 'package:nana/features/auth/bloc/auth_state.dart';
+import 'package:nana/features/auth/repositories/auth_repositories.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
@@ -18,7 +18,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         } else {
           emit(AuthError("Google Login failed"));
         }
-      } catch (e) {
+      } catch (e, stackTrace) {
+        print('GOOGLE LOGIN ERROR: $e');
+
+        print('STACK TRACE: $stackTrace');
+
         emit(AuthError(e.toString()));
       }
     });

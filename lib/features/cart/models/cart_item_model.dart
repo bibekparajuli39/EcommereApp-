@@ -1,11 +1,11 @@
-import 'package:app_project/features/product/models/product_model/product_model.dart';
+import 'package:nana/features/product/models/product/datum.dart';
 
 class CartItemModel {
-  final ProductModel product;
+  final Datum product;
   final int quantity;
 
   CartItemModel({required this.product, required this.quantity});
-  CartItemModel copyWith({ProductModel? product, int? quantity}) {
+  CartItemModel copyWith({Datum? product, int? quantity}) {
     return CartItemModel(
       product: product ?? this.product,
       quantity: quantity ?? this.quantity,

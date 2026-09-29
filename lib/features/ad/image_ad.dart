@@ -1,4 +1,4 @@
-import 'package:app_project/core/constants/app_adimage.dart';
+import 'package:nana/core/constants/app_adimage.dart';
 import 'package:flutter/material.dart';
 
 class ImageAd extends StatefulWidget {
@@ -16,6 +16,14 @@ class _ImageAdState extends State<ImageAd> {
     AppAdimage.imageTwo,
     AppAdimage.imageThree,
   ];
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _imageController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -39,6 +47,13 @@ class _ImageAdState extends State<ImageAd> {
                 height: 250,
                 width: 200,
                 fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) {
+                  return const Icon(
+                    Icons.image_not_supported_outlined,
+                    color: Colors.white54,
+                    size: 50,
+                  );
+                },
               );
             },
           ),
@@ -52,7 +67,7 @@ class _ImageAdState extends State<ImageAd> {
               width: 10,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: currentImage == 0 ? Colors.blue : Colors.grey,
+                color: currentImage == 0 ? Colors.white : Colors.white38,
               ),
             ),
             Container(
@@ -60,7 +75,7 @@ class _ImageAdState extends State<ImageAd> {
               width: 10,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: currentImage == 1 ? Colors.blue : Colors.grey,
+                color: currentImage == 1 ? Colors.white : Colors.white38,
               ),
             ),
             Container(
@@ -68,7 +83,7 @@ class _ImageAdState extends State<ImageAd> {
               width: 10,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: currentImage == 2 ? Colors.blue : Colors.grey,
+                color: currentImage == 2 ? Colors.white : Colors.white38,
               ),
             ),
           ],

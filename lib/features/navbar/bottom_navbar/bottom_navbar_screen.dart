@@ -1,7 +1,7 @@
-import 'package:app_project/features/cart/screens/cart_screen.dart';
-import 'package:app_project/features/home/screens/home_screen.dart';
+import 'package:nana/features/cart/screens/cart_screen.dart';
+import 'package:nana/features/home/screens/home_screen.dart';
 
-import 'package:app_project/features/profile/screens/profile_screen.dart';
+import 'package:nana/features/profile/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 
 class BottomNavbar extends StatefulWidget {

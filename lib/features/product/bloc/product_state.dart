@@ -1,4 +1,4 @@
-import 'package:app_project/features/product/models/product_model/product_model.dart';
+import 'package:nana/features/product/models/product/datum.dart';
 
 abstract class ProductState {}
 
@@ -12,7 +12,7 @@ class ProductError extends ProductState {
 }
 
 class FetchProduct extends ProductState {
-  final List<ProductModel> product;
+  final List<Datum> product;
 
   FetchProduct(this.product);
 }

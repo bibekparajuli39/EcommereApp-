@@ -1,7 +1,8 @@
-import 'package:app_project/features/ad/image_ad.dart';
-import 'package:app_project/features/auth/bloc/auth_bloc.dart';
-import 'package:app_project/features/auth/bloc/auth_state.dart';
-import 'package:app_project/features/product/screens/product_screen.dart';
+import 'package:nana/core/constants/theme_color.dart';
+import 'package:nana/features/ad/image_ad.dart';
+import 'package:nana/features/auth/bloc/auth_bloc.dart';
+import 'package:nana/features/auth/bloc/auth_state.dart';
+import 'package:nana/features/product/screens/product_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +15,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  static const Color primaryColor = Color(0xFF6A3DE8);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +55,30 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               );
             }
-            return SizedBox();
+            return Row(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Hi,User!',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      "Discover products you'll love",
+                      style: TextStyle(color: Colors.grey, fontSize: 14),
+                    ),
+                  ],
+                ),
+
+                Spacer(),
+
+                CircleAvatar(radius: 25, child: Icon(Icons.person)),
+              ],
+            );
           },
         ),
       ),
@@ -73,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30),
                       borderSide: const BorderSide(
-                        color: Colors.grey,
+                        color: ThemeColor.primaryColor,
                         width: 1,
                       ),
                     ),
@@ -89,6 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       borderRadius: BorderRadius.circular(22),
                     ),
                     prefixIcon: IconButton(
+                      color: ThemeColor.primaryColor,
                       onPressed: () {},
                       icon: Icon(Icons.search_sharp),
                     ),
@@ -97,11 +124,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               Container(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE8F3FA),
-                  borderRadius: BorderRadius.circular(22),
-                  border: Border.all(width: 0.2, color: Colors.grey),
+                  gradient: const LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [Color(0xFF6A3DE8), Color(0xFF8B5CF6)],
+                  ),
+                  borderRadius: BorderRadius.circular(24),
                 ),
                 child: Row(
                   children: [
@@ -109,24 +139,39 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisAlignment: .start,
                       spacing: 10,
                       children: [
-                        Text('SUMMER COLLECTION'),
+                        Text(
+                          'SUMMER COLLECTION',
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 1.2,
+                          ),
+                        ),
                         Text(
                           'New Arrivals \nAre Here',
                           style: TextStyle(
-                            fontSize: 19,
+                            color: Colors.white,
+                            fontSize: 23,
+                            height: 1.1,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         SizedBox(height: 8),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.black,
+                            backgroundColor: Colors.white,
+                            foregroundColor: primaryColor,
+                            elevation: 0,
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
                           ),
                           onPressed: () {},
                           child: Text(
                             'Shop Now',
                             style: TextStyle(
-                              color: Colors.white,
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
                             ),

@@ -72,5 +72,6 @@ Future<void> callNotification({
 Future<void> getFCMToken() async {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   String? generatedFcmtoken = await messaging.getToken();
+  // ignore: avoid_print
   print('FCM Token: $generatedFcmtoken');
 }

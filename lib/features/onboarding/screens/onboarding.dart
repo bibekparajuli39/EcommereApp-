@@ -1,6 +1,7 @@
-import 'package:app_project/core/constants/app_assets.dart';
-import 'package:app_project/core/routes/route.dart';
-import 'package:app_project/features/services/shared_preferences.dart';
+import 'package:nana/core/constants/app_assets.dart';
+import 'package:nana/core/routes/route.dart';
+import 'package:nana/features/services/shared_preferences.dart';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 

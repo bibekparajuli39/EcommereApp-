@@ -1,17 +1,15 @@
-import 'package:app_project/core/routes/route.dart';
-import 'package:app_project/features/auth/screens/auth_screen.dart';
+import 'package:nana/core/routes/route.dart';
 
-import 'package:app_project/features/auth/screens/login_screen.dart';
-import 'package:app_project/features/auth/screens/signup_screen.dart';
-import 'package:app_project/features/cart/screens/cart_screen.dart';
-import 'package:app_project/features/navbar/bottom_navbar/bottom_navbar_screen.dart';
-import 'package:app_project/features/onboarding/screens/onboarding.dart';
+import 'package:nana/features/auth/screens/login_screen.dart';
+import 'package:nana/features/auth/screens/signup_screen.dart';
+import 'package:nana/features/cart/screens/cart_screen.dart';
+import 'package:nana/features/navbar/bottom_navbar/bottom_navbar_screen.dart';
+import 'package:nana/features/onboarding/screens/onboarding.dart';
+import 'package:nana/features/product/models/product/datum.dart';
 
-import 'package:app_project/features/product/models/product_model/product_model.dart';
-
-import 'package:app_project/features/product/screens/product_detail_screen.dart';
-import 'package:app_project/features/product/screens/product_screen.dart';
-import 'package:app_project/features/startup/startup_screen.dart';
+import 'package:nana/features/product/screens/product_detail_screen.dart';
+import 'package:nana/features/product/screens/product_screen.dart';
+import 'package:nana/features/startup/startup_screen.dart';
 
 import 'package:flutter/material.dart';
 
@@ -51,12 +49,6 @@ class AppRoutes {
         path: Routes.login,
         builder: (BuildContext context, GoRouterState state) {
           return const LoginScreen();
-        },
-      ),
-      GoRoute(
-        path: Routes.auth,
-        builder: (BuildContext context, GoRouterState state) {
-          return const AuthScreen();
         },
       ),
 
@@ -106,14 +98,14 @@ class AppRoutes {
       GoRoute(
         path: Routes.productDetail,
         builder: (BuildContext context, GoRouterState state) {
-          final products = state.extra as ProductModel?;
-          if (products == null) {
+          final product = state.extra as Datum?;
+          if (product == null) {
             return const Scaffold(
               body: Center(child: Text('Product not found')),
             );
           }
 
-          return ProductDetailScreen(product: products);
+          return ProductDetailScreen(product: product);
         },
       ),
     ],

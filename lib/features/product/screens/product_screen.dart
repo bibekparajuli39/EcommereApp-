@@ -1,9 +1,10 @@
-import 'package:app_project/core/routes/route.dart';
-import 'package:app_project/features/cart/bloc/cart_bloc.dart';
-import 'package:app_project/features/cart/bloc/cart_event.dart';
-import 'package:app_project/features/product/bloc/product_bloc.dart';
-import 'package:app_project/features/product/bloc/product_event.dart';
-import 'package:app_project/features/product/bloc/product_state.dart';
+import 'package:nana/core/constants/theme_color.dart';
+import 'package:nana/core/routes/route.dart';
+import 'package:nana/features/cart/bloc/cart_bloc.dart';
+import 'package:nana/features/cart/bloc/cart_event.dart';
+import 'package:nana/features/product/bloc/product_bloc.dart';
+import 'package:nana/features/product/bloc/product_event.dart';
+import 'package:nana/features/product/bloc/product_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -84,7 +85,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                   tag: 'Product-${product.id}',
                                   child: Image.network(
                                     product.image.toString(),
-                                    fit: BoxFit.contain,
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
                               ),
@@ -117,8 +118,9 @@ class _ProductScreenState extends State<ProductScreen> {
                                           color: Colors.amber,
                                         ),
                                         SizedBox(width: 3),
+                                        // rateing
                                         Text(
-                                          product.rating!.rate.toString(),
+                                          product.rating.toString(),
                                           style: TextStyle(
                                             fontSize: 12,
                                             fontWeight: FontWeight.w500,
@@ -126,7 +128,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                         ),
                                         SizedBox(width: 3),
                                         Text(
-                                          '(${product.rating!.count.toString()})',
+                                          // ${product.rating!.count.toString()}
+                                          '(count)',
                                           style: TextStyle(
                                             fontSize: 11,
                                             color: Colors.grey.shade600,
@@ -155,7 +158,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                           height: 36,
                                           width: 36,
                                           decoration: BoxDecoration(
-                                            color: Colors.blue,
+                                            color: ThemeColor.primaryColor,
                                             borderRadius: BorderRadius.circular(
                                               10,
                                             ),
@@ -165,6 +168,20 @@ class _ProductScreenState extends State<ProductScreen> {
                                             onPressed: () {
                                               context.read<CartBloc>().add(
                                                 AddToCart(product),
+                                              );
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                SnackBar(
+                                                  backgroundColor:
+                                                      ThemeColor.primaryColor,
+                                                  content: Text(
+                                                    'Successfully Added to Cart',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
                                               );
                                             },
                                             icon: Icon(

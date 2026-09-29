@@ -1,5 +1,5 @@
-import 'package:app_project/features/cart/models/cart_item_model.dart';
-import 'package:app_project/features/product/models/product_model/product_model.dart';
+import 'package:nana/features/cart/models/cart_item_model.dart';
+import 'package:nana/features/product/models/product/datum.dart';
 
 class CartRepositories {
   final List<CartItemModel> _items = [];
@@ -8,7 +8,7 @@ class CartRepositories {
     return List.unmodifiable(_items);
   }
 
-  void addToCart(ProductModel product, {int quantity = 1}) {
+  void addToCart(Datum product, {int quantity = 1}) {
     final item = _items.indexWhere((item) => item.product.id == product.id);
     // if product exists
     if (item != -1) {

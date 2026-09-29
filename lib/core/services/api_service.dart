@@ -1,4 +1,4 @@
-import 'package:app_project/core/networks/api_end_point.dart';
+import 'package:nana/core/networks/api_end_point.dart';
 import 'package:dio/dio.dart';
 
 class ApiService {

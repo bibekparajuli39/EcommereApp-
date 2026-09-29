@@ -1,6 +1,6 @@
-import 'package:app_project/features/cart/bloc/cart_event.dart';
-import 'package:app_project/features/cart/bloc/cart_state.dart';
-import 'package:app_project/features/cart/repositories/cart_repositories.dart';
+import 'package:nana/features/cart/bloc/cart_event.dart';
+import 'package:nana/features/cart/bloc/cart_state.dart';
+import 'package:nana/features/cart/repositories/cart_repositories.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
@@ -20,7 +20,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
     on<AddToCart>((event, emit) async {
       try {
-        repository.addToCart(event.product, quantity: event.quantity);
+        repository.addToCart(
+          event.product as dynamic,
+          quantity: event.quantity,
+        );
         final item = repository.getCartItems();
         emit(CartLoaded(items: item));
       } catch (e) {

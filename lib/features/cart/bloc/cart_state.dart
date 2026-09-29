@@ -1,4 +1,4 @@
-import 'package:app_project/features/cart/models/cart_item_model.dart';
+import 'package:nana/features/cart/models/cart_item_model.dart';
 
 abstract class CartState {}
 

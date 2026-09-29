@@ -1,16 +1,17 @@
-import 'package:app_project/core/networks/api_end_point.dart';
-import 'package:app_project/core/services/api_service.dart';
-
-import 'package:app_project/features/product/models/product_model/product_model.dart';
+import 'package:nana/core/networks/api_end_point.dart';
+import 'package:nana/core/services/api_service.dart';
+import 'package:nana/features/product/models/product/datum.dart';
 
 class ProudctRepository {
   final ApiService _apiService;
 
   ProudctRepository(this._apiService);
 
-  Future<List<ProductModel>> getProducts() async {
+  Future<List<Datum>> getProducts() async {
     final response = await _apiService.get(ApiEndPoint.product);
-    final List data = response.data;
-    return data.map((e) => ProductModel.fromJson(e)).toList();
+    final Map<String, dynamic> data = response.data;
+    return (data['data'] as List)
+        .map((json) => Datum.fromJson(json as Map<String, dynamic>))
+        .toList();
   }
 }

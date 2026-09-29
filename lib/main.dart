@@ -1,15 +1,15 @@
-import 'package:app_project/core/routes/app_routes.dart';
-import 'package:app_project/core/services/api_service.dart';
-import 'package:app_project/features/auth/bloc/auth_bloc.dart';
-import 'package:app_project/features/auth/repositories/auth_repositories.dart';
-import 'package:app_project/features/cart/bloc/cart_bloc.dart';
-import 'package:app_project/features/cart/bloc/cart_event.dart';
-import 'package:app_project/features/cart/repositories/cart_repositories.dart';
-import 'package:app_project/features/product/bloc/product_bloc.dart';
-import 'package:app_project/features/product/bloc/product_event.dart';
-import 'package:app_project/features/product/repositories/proudct_repository.dart';
-import 'package:app_project/features/services/local_notification_service.dart';
-import 'package:app_project/firebase_options.dart';
+import 'package:nana/core/routes/app_routes.dart';
+import 'package:nana/core/services/api_service.dart';
+import 'package:nana/features/auth/bloc/auth_bloc.dart';
+import 'package:nana/features/auth/repositories/auth_repositories.dart';
+import 'package:nana/features/cart/bloc/cart_bloc.dart';
+import 'package:nana/features/cart/bloc/cart_event.dart';
+import 'package:nana/features/cart/repositories/cart_repositories.dart';
+import 'package:nana/features/product/bloc/product_bloc.dart';
+import 'package:nana/features/product/bloc/product_event.dart';
+import 'package:nana/features/product/repositories/proudct_repository.dart';
+import 'package:nana/features/services/local_notification_service.dart';
+import 'package:nana/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -19,13 +19,17 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 @pragma('vm:entry-point')
 Future<void> _backgroundHandler(RemoteMessage message) async {
+  // ignore: avoid_print
   print('#${message.notification?.title}');
 }
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await GoogleSignIn.instance.initialize();
+  await GoogleSignIn.instance.initialize(
+    clientId:
+        '915211954713-onr4acale80q5m87nhgueae4i3r5scgb.apps.googleusercontent.com',
+  );
   runApp(
     MultiBlocProvider(
       providers: [
