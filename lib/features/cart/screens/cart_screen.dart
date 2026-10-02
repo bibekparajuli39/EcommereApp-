@@ -36,7 +36,12 @@ class _CartScreenState extends State<CartScreen> {
           if (state is CartError) {
             return Center(child: Text(state.message));
           }
+          bool isPromoApplied = false;
           if (state is CartLoaded) {
+            isPromoApplied =
+                state.promocode != null &&
+                state.promocode!.isNotEmpty &&
+                state.discount > 0;
             // Items is empty
             if (state.items.isEmpty) {
               return Center(child: Text('Your cart is empty'));
@@ -76,16 +81,19 @@ class _CartScreenState extends State<CartScreen> {
                           spacing: 20,
                           children: [
                             Container(
-                              height: 100,
-                              width: 90,
-                              padding: const EdgeInsets.all(8),
+                              height: 60,
+                              width: 50,
+
                               decoration: BoxDecoration(
                                 color: const Color(0xFFF5F2FF),
                                 borderRadius: BorderRadius.circular(15),
                               ),
-                              child: Image.network(
-                                item.product.image.toString(),
-                                fit: BoxFit.contain,
+                              child: ClipRRect(
+                                borderRadius: BorderRadiusGeometry.circular(15),
+                                child: Image.network(
+                                  item.product.image.toString(),
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                             Expanded(
@@ -108,7 +116,7 @@ class _CartScreenState extends State<CartScreen> {
 
                                   SizedBox(height: 10),
                                   Text(
-                                    '\$${item.product.price}',
+                                    '\$${item.product.price?.toStringAsFixed(0)}',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20,
@@ -132,7 +140,7 @@ class _CartScreenState extends State<CartScreen> {
                                   },
                                   icon: Icon(
                                     Icons.delete_outline,
-                                    size: 21,
+                                    size: 15,
                                     color: Colors.redAccent,
                                   ),
                                 ),
@@ -208,25 +216,41 @@ class _CartScreenState extends State<CartScreen> {
                         suffixIcon: Padding(
                           padding: EdgeInsets.all(6),
                           child: ElevatedButton(
-                            onPressed: () {
-                              context.read<CartBloc>().add(
-                                PromoCode(promocodeController.text),
-                              );
-                            },
+                            onPressed: isPromoApplied
+                                ? null
+                                : () {
+                                    context.read<CartBloc>().add(
+                                      PromoCode(
+                                        promocodeController.text.trim(),
+                                      ),
+                                    );
+                                  },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: ThemeColor.primaryColor,
+                              backgroundColor: isPromoApplied
+                                  ? Colors.green
+                                  : ThemeColor.primaryColor,
+                              disabledBackgroundColor: Colors.green,
                               foregroundColor: Colors.white,
+                              disabledForegroundColor: Colors.white,
                               elevation: 0,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(18),
                               ),
                             ),
-                            child: Text(
-                              'APPLY',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (isPromoApplied) Icon(Icons.check, size: 16),
+                                if (isPromoApplied)
+                                  Text(
+                                    isPromoApplied ? 'APPLIED' : 'APPLY',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                              ],
                             ),
                           ),
                         ),
@@ -249,7 +273,7 @@ class _CartScreenState extends State<CartScreen> {
                             Text('Subtotal', style: TextStyle(fontSize: 18)),
                             Spacer(),
                             Text(
-                              '\$${subTotalPrice.toDouble().toStringAsFixed(2)} ',
+                              'Rs.${subTotalPrice.toDouble().toStringAsFixed(0)} ',
                               style: TextStyle(
                                 fontSize: 17,
                                 fontWeight: FontWeight.bold,
@@ -262,7 +286,7 @@ class _CartScreenState extends State<CartScreen> {
                             Text('Discount', style: TextStyle(fontSize: 18)),
                             Spacer(),
                             Text(
-                              '-\$${state.discount.toStringAsFixed(2)}',
+                              '-Rs.${state.discount.toStringAsFixed(2)}',
                               style: TextStyle(
                                 fontSize: 17,
                                 fontWeight: FontWeight.bold,
@@ -295,7 +319,7 @@ class _CartScreenState extends State<CartScreen> {
                             ),
                             Spacer(),
                             Text(
-                              '\$${total.toDouble().toStringAsFixed(2)}',
+                              'Rs.${total.toDouble().toStringAsFixed(2)}',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,

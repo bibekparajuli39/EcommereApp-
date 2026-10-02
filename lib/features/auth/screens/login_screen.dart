@@ -276,47 +276,93 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 25),
 
-                SizedBox(
-                  width: double.infinity,
-                  height: 54,
+                Row(
+                  mainAxisAlignment: .center,
+                  spacing: 5,
+                  children: [
+                    SizedBox(
+                      height: 54,
 
-                  child: OutlinedButton(
-                    onPressed: () {
-                      context.read<AuthBloc>().add(GoogleLogin());
-                    },
+                      child: OutlinedButton(
+                        onPressed: () {
+                          context.read<AuthBloc>().add(GoogleLogin());
+                        },
 
-                    style: OutlinedButton.styleFrom(
-                      backgroundColor: Colors.white,
+                        style: OutlinedButton.styleFrom(
+                          backgroundColor: Colors.white,
 
-                      side: BorderSide(color: Colors.grey.shade300),
+                          side: BorderSide(color: Colors.grey.shade300),
 
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
-
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const FaIcon(
-                          FontAwesomeIcons.google,
-                          size: 19,
-                          color: Colors.red,
-                        ),
-
-                        const SizedBox(width: 12),
-
-                        const Text(
-                          'Continue with Google',
-                          style: TextStyle(
-                            color: ThemeColor.primaryColor,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
                           ),
                         ),
-                      ],
+
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const FaIcon(
+                              FontAwesomeIcons.google,
+                              size: 14,
+                              color: Colors.red,
+                            ),
+
+                            const SizedBox(width: 12),
+
+                            const Text(
+                              'Google',
+                              style: TextStyle(
+                                color: ThemeColor.primaryColor,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
+                    SizedBox(
+                      height: 54,
+
+                      child: OutlinedButton(
+                        onPressed: () {
+                          context.read<AuthBloc>().add(FacebookLogin());
+                        },
+
+                        style: OutlinedButton.styleFrom(
+                          backgroundColor: Colors.white,
+
+                          side: BorderSide(color: Colors.grey.shade300),
+
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                        ),
+
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const FaIcon(
+                              FontAwesomeIcons.facebook,
+                              size: 14,
+                              color: Colors.blueAccent,
+                            ),
+
+                            const SizedBox(width: 12),
+
+                            const Text(
+                              'Facebook',
+                              style: TextStyle(
+                                color: ThemeColor.primaryColor,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
 
                 const SizedBox(height: 30),

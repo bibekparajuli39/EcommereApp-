@@ -73,7 +73,7 @@ class AppRoutes {
       GoRoute(
         path: Routes.product,
         builder: (BuildContext context, GoRouterState state) {
-          return const ProductScreen();
+          return ProductScreen();
         },
 
         // builder: (context, state) {

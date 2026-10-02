@@ -10,6 +10,7 @@ class ProudctRepository {
   Future<List<Datum>> getProducts() async {
     final response = await _apiService.get(ApiEndPoint.product);
     final Map<String, dynamic> data = response.data;
+
     return (data['data'] as List)
         .map((json) => Datum.fromJson(json as Map<String, dynamic>))
         .toList();

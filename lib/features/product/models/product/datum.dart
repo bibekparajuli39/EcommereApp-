@@ -64,4 +64,37 @@ class Datum {
     'image': image,
     'rating': rating,
   };
+  Datum copyWith({
+    int? id,
+    String? title,
+    bool? isNew,
+    String? oldPrice,
+    double? price,
+    double? discountedPrice,
+    String? description,
+    String? category,
+    String? type,
+    int? stock,
+    String? brand,
+    List<String>? size,
+    String? image,
+    int? rating,
+  }) {
+    return Datum(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      isNew: isNew ?? this.isNew,
+      oldPrice: oldPrice ?? this.oldPrice,
+      price: price ?? this.price,
+      discountedPrice: discountedPrice ?? this.discountedPrice,
+      description: description ?? this.description,
+      category: category ?? this.category,
+      type: type ?? this.type,
+      stock: stock ?? this.stock,
+      brand: brand ?? this.brand,
+      size: size ?? this.size,
+      image: image ?? this.image,
+      rating: rating ?? this.rating,
+    );
+  }
 }

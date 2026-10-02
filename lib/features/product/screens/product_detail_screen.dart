@@ -1,12 +1,11 @@
 import 'package:nana/core/constants/theme_color.dart';
-import 'package:nana/core/routes/route.dart';
+
 import 'package:nana/features/cart/bloc/cart_bloc.dart';
 import 'package:nana/features/cart/bloc/cart_event.dart';
 import 'package:nana/features/product/models/product/datum.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final Datum product;
@@ -22,13 +21,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            context.go(Routes.home);
-          },
-          icon: Icon(Icons.arrow_back),
+        title: Text(
+          widget.product.title.toString(),
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
-        title: Text(''),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -50,17 +48,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         ),
                       ),
                     ),
+
                     Text(
-                      widget.product.title.toString(),
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      maxLines: 4,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Text(
-                      '\$${widget.product.price}',
+                      '\$${widget.product.price?.toStringAsFixed(0)}.',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
@@ -72,7 +62,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         Icon(Icons.star, color: Colors.orange),
                         Text('${widget.product.rating}'),
                         // ${widget.product.rating!.count}
-                        Text('( review)'),
+                        Text('(review)'),
                       ],
                     ),
 

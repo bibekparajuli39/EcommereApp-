@@ -18,14 +18,28 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         } else {
           emit(AuthError("Google Login failed"));
         }
-      } catch (e, stackTrace) {
+      } catch (e) {
         print('GOOGLE LOGIN ERROR: $e');
-
-        print('STACK TRACE: $stackTrace');
 
         emit(AuthError(e.toString()));
       }
     });
+    on<FacebookLogin>((event, emit) async {
+      emit(AuthLoading());
+
+      try {
+        final response = await repository.facebookLogin();
+
+        if (response.user != null) {
+          emit(AuthAuthenticated(response.user!));
+        } else {
+          emit(AuthError('Facebook login failed'));
+        }
+      } catch (e) {
+        emit(AuthError(e.toString()));
+      }
+    });
+
     on<Logout>((event, emit) async {
       try {
         emit(AuthLoading());

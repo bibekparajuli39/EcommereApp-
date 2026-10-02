@@ -61,21 +61,23 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
     on<PromoCode>((event, emit) {
       try {
-        final item = repository.getCartItems();
-        final subtotalprice = item.fold<double>(0, (total, item) {
-          return total + item.subtotalPrice;
-        });
+        final items = repository.getCartItems();
+
+        final subtotalPrice = items.fold<double>(
+          0,
+          (total, item) => total + item.subtotalPrice,
+        );
+
+        final promocode = event.promocode.trim().toUpperCase();
 
         double discount = 0;
-        if (event.promocode == "SAVE10") {
-          discount = subtotalprice * 0.10;
+
+        if (promocode == 'SAVE10') {
+          discount = subtotalPrice * 0.10;
         }
+
         emit(
-          CartLoaded(
-            items: item,
-            promocode: event.promocode,
-            discount: discount,
-          ),
+          CartLoaded(items: items, promocode: promocode, discount: discount),
         );
       } catch (e) {
         emit(CartError(e.toString()));
