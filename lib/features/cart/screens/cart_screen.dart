@@ -1,4 +1,8 @@
+import 'dart:developer';
+
+import 'package:khalti_checkout_flutter/khalti_checkout_flutter.dart';
 import 'package:nana/core/constants/theme_color.dart';
+import 'package:nana/core/utils/khalti_util.dart';
 import 'package:nana/features/cart/bloc/cart_bloc.dart';
 import 'package:nana/features/cart/bloc/cart_event.dart';
 import 'package:nana/features/cart/bloc/cart_state.dart';
@@ -13,7 +17,75 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  Khalti? _khalti;
   final TextEditingController promocodeController = TextEditingController();
+  Future<void> payWithKhalti(int amount) async {
+    final pidx = await UtilsKhaltiService.generatePidx(amount);
+    print(pidx);
+    // generate pidx
+    if (pidx == null) {
+      print('pidx is Empty');
+    } else {
+      final config = KhaltiPayConfig(
+        publicKey: '2e1b40bd59824b8d995f0cc63a24c06d',
+        pidx: pidx,
+        environment: Environment.test,
+        paymentUrl:
+            'https://test-pay.khalti.com/?pidx=$pidx&return_url=https%3A%2F%2Fdocs.khalti.com%2Fkhalti-epayment&mode=wallet',
+      );
+      // 3. Initialize Khalti
+      _khalti = await Khalti.init(
+        enableDebugging: true,
+        payConfig: config,
+
+        onPaymentResult: (paymentResult, khalti) {
+          log("Payment Result: ${paymentResult.payload}");
+
+          log("Transaction ID: ${paymentResult.payload?.transactionId}");
+
+          if (!mounted) return;
+
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text("Payment Successful!")));
+
+          khalti.close(context);
+        },
+
+        onMessage:
+            (
+              khalti, {
+              description,
+              statusCode,
+              event,
+              needsPaymentConfirmation,
+            }) async {
+              log(
+                "Message: $description, "
+                "Status Code: $statusCode, "
+                "Event: $event",
+              );
+
+              if (needsPaymentConfirmation == true) {
+                await khalti.verify();
+              }
+
+              if (!mounted) return;
+
+              khalti.close(context);
+            },
+
+        onReturn: () {
+          log("Returned from Khalti Gateway Interface");
+        },
+      );
+
+      // 4. Open Khalti payment screen
+      if (!mounted) return;
+
+      _khalti?.open(context);
+    }
+  }
 
   @override
   void dispose() {
@@ -116,7 +188,7 @@ class _CartScreenState extends State<CartScreen> {
 
                                   SizedBox(height: 10),
                                   Text(
-                                    '\$${item.product.price?.toStringAsFixed(0)}',
+                                    'Rs.${item.product.price?.toStringAsFixed(0)}',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20,
@@ -344,7 +416,8 @@ class _CartScreenState extends State<CartScreen> {
                             borderRadius: BorderRadius.circular(28),
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () async =>
+                            await payWithKhalti(total.toInt()),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

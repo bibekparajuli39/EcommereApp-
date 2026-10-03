@@ -109,21 +109,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                     SizedBox(height: 10),
 
-                    // profile
-                    profileMenu(
-                      icon: Icons.person_outline,
-                      title: 'Profile',
-                      subtitle: 'Edit your profile',
-                      onTap: () {},
-                    ),
-
                     // cart list
                     profileMenu(
                       icon: Icons.favorite_border,
                       title: 'Wishlist',
                       subtitle: 'View your favorite products',
                       onTap: () {
-                        context.pushReplacement(Routes.cart);
+                        context.push(Routes.cart);
                       },
                     ),
 
@@ -141,13 +133,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       onTap: () {
                         // context.push(Routes.order);
                       },
-                    ),
-
-                    profileMenu(
-                      icon: Icons.settings_outlined,
-                      title: 'Settings',
-                      subtitle: 'Manage your account',
-                      onTap: () {},
                     ),
 
                     // Logout

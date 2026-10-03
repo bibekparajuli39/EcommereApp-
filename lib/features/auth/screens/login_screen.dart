@@ -224,12 +224,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: ElevatedButton(
                     onPressed: () {
                       // Use your existing login event here
-                      // context.read<AuthBloc>().add(
-                      //   LoginRequested(
-                      //     email: emailController.text.trim(),
-                      //     password: passwordController.text.trim(),
-                      //   ),
-                      // );
+                      context.read<AuthBloc>().add(
+                        EmailLogin(
+                          email: emailController.text.trim(),
+                          password: passwordController.text.trim(),
+                        ),
+                      );
                     },
 
                     style: ElevatedButton.styleFrom(

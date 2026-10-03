@@ -1,11 +1,49 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthRepositories {
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  // Facebook
+  final FirebaseAuth auth;
+
+  AuthRepositories(this.auth);
+
+  Future<UserCredential> signUp(
+    String name,
+    String email,
+    String password,
+  ) async {
+    UserCredential userCredential = await auth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    User user = userCredential.user!;
+
+    await user.updateDisplayName(name);
+
+    await user.reload();
+
+    await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+      'uid': user.uid,
+      'fullName': name,
+      'email': email,
+      'createdAt': Timestamp.now(),
+    });
+
+    return userCredential;
+  }
+
+  // Email Login
+  Future<UserCredential> signIn(String email, String password) async {
+    return await auth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+  }
+
+  // Facebook Login
+
   Future<UserCredential> facebookLogin() async {
     final LoginResult result = await FacebookAuth.instance.login();
 
@@ -13,42 +51,43 @@ class AuthRepositories {
       throw Exception('Facebook login cancelled or failed');
     }
 
-    final AccessToken accessToken = result.accessToken!;
-    print(accessToken);
+    final AccessToken? accessToken = result.accessToken;
+
+    if (accessToken == null) {
+      throw Exception('Facebook access token is null');
+    }
 
     final OAuthCredential credential = FacebookAuthProvider.credential(
       accessToken.tokenString,
     );
 
-    return await _firebaseAuth.signInWithCredential(credential);
+    return await auth.signInWithCredential(credential);
   }
 
-  // Google
+  // Google Login
   Future<UserCredential> googleLogin() async {
-    // 1. login to google
     final GoogleSignInAccount googleUser = await GoogleSignIn.instance
         .authenticate();
-    print('Email: ${googleUser.email}');
 
-    // 2. get google authentication
+    print('Google Email: ${googleUser.email}');
+
     final GoogleSignInAuthentication googleAuth = googleUser.authentication;
+
     print('ID Token: ${googleAuth.idToken != null}');
 
-    // 3. create firebase credential
-    final credential = GoogleAuthProvider.credential(
+    final OAuthCredential credential = GoogleAuthProvider.credential(
       idToken: googleAuth.idToken,
     );
-    // 4.login to firebase
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+
+    return await auth.signInWithCredential(credential);
   }
 
-  Future logout() async {
-    // for google logout
-    await FirebaseAuth.instance.signOut();
+  // Logout
+  Future<void> logout() async {
+    await auth.signOut();
+
     await GoogleSignIn.instance.signOut();
 
-    // for facebook logout
     await FacebookAuth.instance.logOut();
-    await _firebaseAuth.signOut();
   }
 }

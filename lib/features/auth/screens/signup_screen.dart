@@ -16,6 +16,9 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreenState extends State<SignupScreen> {
   bool isVisible = true;
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   static Color primaryColor = Color(0xFF6A3DE8);
 
@@ -26,19 +29,36 @@ class _SignupScreenState extends State<SignupScreen> {
 
       body: SafeArea(
         child: BlocListener<AuthBloc, AuthState>(
-          listener: (context, state) {
+          listener: (context, state) async {
             if (state is AuthAuthenticated) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Login successful'),
+                  content: Text(
+                    'Account created successfully',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                   backgroundColor: primaryColor,
                   duration: Duration(seconds: 2),
+                  behavior: SnackBarBehavior.floating,
+                  margin: EdgeInsets.all(16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
               );
-              context.go(Routes.home);
+
+              await Future.delayed(Duration(milliseconds: 500));
+
+              if (context.mounted) {
+                context.go(Routes.login);
+              }
             }
 
             if (state is AuthError) {
+              // ignore: use_build_context_synchronously
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(state.message.toString()),
@@ -109,6 +129,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 SizedBox(height: 8),
 
                 TextFormField(
+                  controller: nameController,
                   decoration: InputDecoration(
                     hintText: 'Enter your name',
                     prefixIcon: Icon(Icons.person_outline, color: primaryColor),
@@ -132,6 +153,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 SizedBox(height: 8),
 
                 TextFormField(
+                  controller: emailController,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     hintText: 'Enter your email',
@@ -156,6 +178,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 SizedBox(height: 8),
 
                 TextFormField(
+                  controller: passwordController,
                   obscureText: isVisible,
                   decoration: InputDecoration(
                     hintText: 'Enter your password',
@@ -192,7 +215,13 @@ class _SignupScreenState extends State<SignupScreen> {
                   height: 56,
                   child: ElevatedButton(
                     onPressed: () {
-                      context.go(Routes.home);
+                      context.read<AuthBloc>().add(
+                        Signup(
+                          name: nameController.text.toString(),
+                          email: emailController.text.toString(),
+                          password: passwordController.text.toString(),
+                        ),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: primaryColor,

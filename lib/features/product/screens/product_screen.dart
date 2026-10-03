@@ -129,8 +129,9 @@ class _ProductScreenState extends State<ProductScreen> {
                                       vertical: 4,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: ThemeColor.primaryColor
-                                          .withOpacity(0.08),
+                                      color: ThemeColor.primaryColor.withValues(
+                                        alpha: 0.08,
+                                      ),
                                       borderRadius: BorderRadius.circular(6),
                                     ),
                                     child: Text(

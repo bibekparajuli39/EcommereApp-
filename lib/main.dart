@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:nana/core/routes/app_routes.dart';
 import 'package:nana/core/services/api_service.dart';
 import 'package:nana/features/auth/bloc/auth_bloc.dart';
@@ -34,7 +35,9 @@ void main() async {
     MultiBlocProvider(
       providers: [
         // auth
-        BlocProvider(create: (_) => AuthBloc(AuthRepositories())),
+        BlocProvider(
+          create: (_) => AuthBloc(AuthRepositories(FirebaseAuth.instance)),
+        ),
         // Cart BLoC
         BlocProvider(
           create: (context) => CartBloc(CartRepositories())..add(LoadCart()),
