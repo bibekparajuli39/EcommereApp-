@@ -10,8 +10,9 @@ class CartLoaded extends CartState {
   final List<CartItemModel> items;
   final String? promocode;
   final double discount;
+  final String? promoError;
 
-  CartLoaded({this.promocode, this.discount = 0, required this.items});
+  CartLoaded(this.items, {this.promocode, this.discount = 0, this.promoError});
 }
 
 class CartError extends CartState {

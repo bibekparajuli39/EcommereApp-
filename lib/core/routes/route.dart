@@ -7,4 +7,7 @@ class Routes {
   static final signup = '/signup';
   static final startup = '/';
   static final productDetail = '/productdetail';
+  static final address = '/address';
+  static final setting = '/setting';
+  static final aboutus = '/aboutus';
 }

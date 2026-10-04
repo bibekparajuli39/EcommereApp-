@@ -39,6 +39,17 @@ class _LoginScreenState extends State<LoginScreen> {
         child: BlocListener<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state is AuthAuthenticated) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: Colors.green.shade600,
+                  behavior: SnackBarBehavior.floating,
+                  duration: Duration(seconds: 2),
+                  content: Text(
+                    'Successfully login',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              );
               context.go(Routes.home);
             }
 
@@ -286,6 +297,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: OutlinedButton(
                         onPressed: () {
                           context.read<AuthBloc>().add(GoogleLogin());
+                          ;
                         },
 
                         style: OutlinedButton.styleFrom(

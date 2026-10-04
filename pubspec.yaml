@@ -51,6 +51,8 @@ dependencies:
   khalti_checkout_flutter: ^1.0.1
   http: ^1.6.0
   cloud_firestore: ^6.10.0
+  timezone: ^0.11.1
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:

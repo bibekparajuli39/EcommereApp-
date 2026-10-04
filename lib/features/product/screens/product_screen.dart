@@ -1,6 +1,7 @@
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:nana/core/constants/theme_color.dart';
 import 'package:nana/core/routes/route.dart';
+import 'package:nana/core/widgets/product_shimmer.dart';
 import 'package:nana/features/cart/bloc/cart_bloc.dart';
 import 'package:nana/features/cart/bloc/cart_event.dart';
 import 'package:nana/features/product/bloc/product_bloc.dart';
@@ -10,6 +11,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:nana/features/services/local_notification_service.dart';
 
 class ProductScreen extends StatefulWidget {
   const ProductScreen({super.key});
@@ -33,10 +35,19 @@ class _ProductScreenState extends State<ProductScreen> {
           BlocBuilder<ProductBloc, ProductState>(
             builder: (context, state) {
               if (state is ProductLoading) {
-                return Center(
-                  child: CircularProgressIndicator(
-                    color: ThemeColor.primaryColor,
+                return MasonryGridView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  padding: EdgeInsets.fromLTRB(10, 0, 10, 20),
+                  gridDelegate: SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
                   ),
+                  crossAxisSpacing: 15,
+                  mainAxisSpacing: 18,
+                  itemCount: 6,
+                  itemBuilder: (context, index) {
+                    return ProductShimmer(index: index);
+                  },
                 );
               }
               if (state is ProductError) {
@@ -109,7 +120,7 @@ class _ProductScreenState extends State<ProductScreen> {
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.fromLTRB(12, 8, 8, 8),
+                              padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -123,44 +134,89 @@ class _ProductScreenState extends State<ProductScreen> {
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   SizedBox(height: 7),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 4,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: ThemeColor.primaryColor.withValues(
-                                        alpha: 0.08,
-                                      ),
-                                      borderRadius: BorderRadius.circular(6),
-                                    ),
-                                    child: Text(
-                                      product.type.toString(),
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        color: ThemeColor.primaryColor,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(height: 7),
                                   Row(
+                                    mainAxisAlignment: .spaceBetween,
                                     children: [
-                                      Icon(
-                                        Icons.star,
-                                        size: 16,
-                                        color: Colors.amber,
+                                      Flexible(
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 8,
+                                            vertical: 4,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: ThemeColor.primaryColor
+                                                .withValues(alpha: 0.08),
+                                            borderRadius: BorderRadius.circular(
+                                              6,
+                                            ),
+                                          ),
+                                          child: Text(
+                                            product.type.toString(),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              fontSize: 10,
+                                              color: ThemeColor.primaryColor,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
                                       ),
-                                      SizedBox(width: 3),
-                                      Text(
-                                        product.rating.toString(),
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
+
+                                      SizedBox(width: 5),
+
+                                      Flexible(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            ...List.generate(5, (starIndex) {
+                                              final rating =
+                                                  product.rating ?? 0;
+
+                                              if (starIndex < rating.floor()) {
+                                                return Icon(
+                                                  Icons.star,
+                                                  color: Colors.orange,
+                                                  size: 13,
+                                                );
+                                              }
+
+                                              if (starIndex < rating) {
+                                                return Icon(
+                                                  Icons.star_half,
+                                                  color: Colors.orange,
+                                                  size: 13,
+                                                );
+                                              }
+
+                                              return Icon(
+                                                Icons.star_border,
+                                                color: Colors.orange,
+                                                size: 13,
+                                              );
+                                            }),
+
+                                            SizedBox(width: 2),
+
+                                            Flexible(
+                                              child: Text(
+                                                product.rating.toString(),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  fontSize: 11,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ],
                                   ),
+
                                   SizedBox(height: 8),
                                   Row(
                                     mainAxisAlignment:
@@ -186,7 +242,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                         ),
                                         child: IconButton(
                                           padding: EdgeInsets.zero,
-                                          onPressed: () {
+                                          onPressed: () async {
                                             context.read<CartBloc>().add(
                                               AddToCart(product),
                                             );
@@ -231,6 +287,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                                       ),
                                                     ),
                                                     SizedBox(width: 12),
+
                                                     Expanded(
                                                       child: Column(
                                                         mainAxisSize:
@@ -304,6 +361,15 @@ class _ProductScreenState extends State<ProductScreen> {
                                                   context.push(Routes.cart);
                                                 }
                                               },
+                                            );
+                                            savePendingCartProduct(
+                                              productName: product.title
+                                                  .toString(),
+                                            );
+                                            await scheduleCartNotification(
+                                              productName:
+                                                  product.title ??
+                                                  'Your product',
                                             );
                                           },
                                           icon: Icon(

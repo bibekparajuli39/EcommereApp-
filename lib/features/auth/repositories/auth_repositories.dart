@@ -5,45 +5,83 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthRepositories {
   final FirebaseAuth auth;
+  final FirebaseFirestore firestore;
 
-  AuthRepositories(this.auth);
+  AuthRepositories(this.auth, this.firestore);
 
+  Future<void> saveUserToFirestore(
+    User user, {
+    String provider = 'email',
+    String? name,
+  }) async {
+    await firestore.collection('users').doc(user.uid).set({
+      'uid': user.uid,
+      'fullName': name ?? user.displayName ?? '',
+      'email': user.email ?? '',
+      'photoUrl': user.photoURL ?? '',
+      'provider': provider,
+      'updatedAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
+  }
+
+  // EMAIL SIGN UP
   Future<UserCredential> signUp(
     String name,
     String email,
     String password,
   ) async {
-    UserCredential userCredential = await auth.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+    final UserCredential userCredential = await auth
+        .createUserWithEmailAndPassword(email: email, password: password);
 
-    User user = userCredential.user!;
+    final User user = userCredential.user!;
 
     await user.updateDisplayName(name);
-
     await user.reload();
 
-    await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-      'uid': user.uid,
-      'fullName': name,
-      'email': email,
-      'createdAt': Timestamp.now(),
-    });
+    final User updatedUser = auth.currentUser!;
+
+    await saveUserToFirestore(updatedUser, provider: 'email', name: name);
 
     return userCredential;
   }
 
-  // Email Login
+  // email login
   Future<UserCredential> signIn(String email, String password) async {
-    return await auth.signInWithEmailAndPassword(
+    final UserCredential userCredential = await auth.signInWithEmailAndPassword(
       email: email,
       password: password,
     );
+
+    await saveUserToFirestore(userCredential.user!, provider: 'email');
+
+    return userCredential;
   }
 
-  // Facebook Login
+  // google login
+  Future<UserCredential> googleLogin() async {
+    final GoogleSignInAccount googleUser = await GoogleSignIn.instance
+        .authenticate();
 
+    final GoogleSignInAuthentication googleAuth = googleUser.authentication;
+
+    if (googleAuth.idToken == null) {
+      throw Exception('Google ID token is null');
+    }
+
+    final OAuthCredential credential = GoogleAuthProvider.credential(
+      idToken: googleAuth.idToken,
+    );
+
+    final UserCredential userCredential = await auth.signInWithCredential(
+      credential,
+    );
+
+    await saveUserToFirestore(userCredential.user!, provider: 'google');
+
+    return userCredential;
+  }
+
+  // facebook login
   Future<UserCredential> facebookLogin() async {
     final LoginResult result = await FacebookAuth.instance.login();
 
@@ -61,33 +99,25 @@ class AuthRepositories {
       accessToken.tokenString,
     );
 
-    return await auth.signInWithCredential(credential);
-  }
-
-  // Google Login
-  Future<UserCredential> googleLogin() async {
-    final GoogleSignInAccount googleUser = await GoogleSignIn.instance
-        .authenticate();
-
-    print('Google Email: ${googleUser.email}');
-
-    final GoogleSignInAuthentication googleAuth = googleUser.authentication;
-
-    print('ID Token: ${googleAuth.idToken != null}');
-
-    final OAuthCredential credential = GoogleAuthProvider.credential(
-      idToken: googleAuth.idToken,
+    final UserCredential userCredential = await auth.signInWithCredential(
+      credential,
     );
 
-    return await auth.signInWithCredential(credential);
+    await saveUserToFirestore(userCredential.user!, provider: 'facebook');
+
+    return userCredential;
   }
 
-  // Logout
+  // logout
   Future<void> logout() async {
     await auth.signOut();
 
-    await GoogleSignIn.instance.signOut();
+    try {
+      await GoogleSignIn.instance.signOut();
+    } catch (_) {}
 
-    await FacebookAuth.instance.logOut();
+    try {
+      await FacebookAuth.instance.logOut();
+    } catch (_) {}
   }
 }

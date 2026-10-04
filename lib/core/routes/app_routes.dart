@@ -1,4 +1,6 @@
 import 'package:nana/core/routes/route.dart';
+import 'package:nana/features/aboutus/screens/about_us.dart';
+import 'package:nana/features/address/screens/address_screen.dart';
 
 import 'package:nana/features/auth/screens/login_screen.dart';
 import 'package:nana/features/auth/screens/signup_screen.dart';
@@ -9,6 +11,7 @@ import 'package:nana/features/product/models/product/datum.dart';
 
 import 'package:nana/features/product/screens/product_detail_screen.dart';
 import 'package:nana/features/product/screens/product_screen.dart';
+import 'package:nana/features/setting/screens/setting_screen.dart';
 import 'package:nana/features/startup/startup_screen.dart';
 
 import 'package:flutter/material.dart';
@@ -92,6 +95,25 @@ class AppRoutes {
         builder: (BuildContext context, GoRouterState state) {
           // final product = state.extra as ProductModel;
           return CartScreen();
+        },
+      ),
+      // Address
+      GoRoute(
+        path: Routes.address,
+        builder: (BuildContext context, GoRouterState state) {
+          return AddressScreen();
+        },
+      ),
+      GoRoute(
+        path: Routes.setting,
+        builder: (BuildContext context, GoRouterState state) {
+          return SettingsScreen();
+        },
+      ),
+      GoRoute(
+        path: Routes.aboutus,
+        builder: (BuildContext context, GoRouterState state) {
+          return AboutUsScreen();
         },
       ),
       // Onboarding

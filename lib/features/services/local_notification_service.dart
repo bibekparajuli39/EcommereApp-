@@ -1,77 +1,119 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timezone/data/latest.dart' as tz_data;
+import 'package:timezone/timezone.dart' as tz;
 
-//Step 1: Creating instance of FLutter Local Notification Plugin
 final FlutterLocalNotificationsPlugin localNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
-// to initialize Flutter Local Notifications.
 Future<void> initFLutterLocalNotification() async {
-  // Step 2:  Configuring Android notification settings.
+  tz_data.initializeTimeZones();
+
   const AndroidInitializationSettings androidInitializationSettings =
       AndroidInitializationSettings('@mipmap/ic_launcher');
 
-  // Step 3: Creating general initialization settings for android
   final InitializationSettings initializationSettings = InitializationSettings(
     android: androidInitializationSettings,
   );
 
-  // Step 4:Initialize the notification plugin.
-  // This prepares the plugin so we can show notifications later.
   await localNotificationsPlugin.initialize(settings: initializationSettings);
 
-  // Step 4: Ask the user for permission to send notifications.
-  // This is required on newer versions of Android.
-  await localNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin
-      >()
-      ?.requestNotificationsPermission();
-}
-// final FlutterLocalNotificationsPlugin localNotificationsPlugin =
-//     FlutterLocalNotificationsPlugin();
+  final AndroidFlutterLocalNotificationsPlugin? androidPlugin =
+      localNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin
+          >();
 
-// Future<void> initFlutterLocalNotification() async {
-//   // step 2
-//   const AndroidInitializationSettings androidInitializationSettings =
-//       AndroidInitializationSettings('@mipmap/ic_launcher');
-//   // step 3
-//   final InitializationSettings initializationSettings = InitializationSettings(
-//     android: androidInitializationSettings,
-//   );
-//   await localNotificationsPlugin.initialize(settings: initializationSettings);
-//   await localNotificationsPlugin
-//       .resolvePlatformSpecificImplementation<
-//         AndroidFlutterLocalNotificationsPlugin
-//       >()
-//       ?.requestNotificationsPermission();
-// }
+  await androidPlugin?.requestNotificationsPermission();
+
+  const AndroidNotificationChannel channel = AndroidNotificationChannel(
+    'cart_reminder_channel',
+    'Cart Reminders',
+    description: 'Reminders for products added to cart',
+    importance: Importance.high,
+  );
+
+  await androidPlugin?.createNotificationChannel(channel);
+}
+
 Future<void> callNotification({
   required String title,
   required String body,
 }) async {
-  // Intialized notification
-  const android = AndroidNotificationDetails(
+  final prefs = await SharedPreferences.getInstance();
+
+  final notificationsEnabled = prefs.getBool('notifications_enabled') ?? true;
+
+  if (!notificationsEnabled) {
+    print('notifications are disabled ');
+    return;
+  }
+
+  const AndroidNotificationDetails android = AndroidNotificationDetails(
     'reminder_channel',
     'Reminders',
     channelDescription: 'Local Notification',
     importance: Importance.high,
     priority: Priority.high,
   );
-  // detail for notification like title,body for descritpion
-  const detail = NotificationDetails(android: android);
+
+  const NotificationDetails detail = NotificationDetails(android: android);
+
   await localNotificationsPlugin.show(
     id: 0,
     title: title,
     body: body,
-
     notificationDetails: detail,
   );
 }
 
+Future<void> scheduleCartNotification({required String productName}) async {
+  final prefs = await SharedPreferences.getInstance();
+
+  final notificationsEnabled = prefs.getBool('notifications_enabled') ?? true;
+
+  if (!notificationsEnabled) {
+    print('Notifications are disabled');
+    return;
+  }
+
+  const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+    'cart_reminder_channel',
+    'Cart Reminders',
+    channelDescription: 'Reminders for products added to cart',
+    importance: Importance.high,
+    priority: Priority.high,
+  );
+
+  const NotificationDetails details = NotificationDetails(
+    android: androidDetails,
+  );
+
+  final scheduledTime = tz.TZDateTime.now(
+    tz.local,
+  ).add(const Duration(seconds: 10));
+
+  await localNotificationsPlugin.zonedSchedule(
+    id: productName.hashCode,
+    title: 'Donot forget your cart',
+    body: '$productName is still waiting in your cart.',
+    scheduledDate: scheduledTime,
+    notificationDetails: details,
+    androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+  );
+}
+
+Future<void> savePendingCartProduct({required String productName}) async {
+  final prefs = await SharedPreferences.getInstance();
+
+  await prefs.setString('pending_product_name', productName);
+}
+
 Future<void> getFCMToken() async {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
+
   String? generatedFcmtoken = await messaging.getToken();
-  // ignore: avoid_print
+
   print('FCM Token: $generatedFcmtoken');
 }

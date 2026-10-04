@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:nana/core/constants/theme_color.dart';
 import 'package:nana/core/routes/route.dart';
 import 'package:nana/features/ad/image_ad.dart';
@@ -5,6 +7,7 @@ import 'package:nana/features/auth/bloc/auth_bloc.dart';
 import 'package:nana/features/auth/bloc/auth_state.dart';
 import 'package:nana/features/product/bloc/product_bloc.dart';
 import 'package:nana/features/product/bloc/product_event.dart';
+
 import 'package:nana/features/product/screens/product_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -289,7 +292,21 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             Spacer(),
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                final products = context
+                                    .read<ProductBloc>()
+                                    .allProducts;
+                                if (products.isEmpty) {
+                                  return;
+                                }
+                                final random = math.Random();
+                                final randomProduct =
+                                    products[random.nextInt(products.length)];
+                                context.push(
+                                  Routes.productDetail,
+                                  extra: randomProduct,
+                                );
+                              },
                               child: Text('Shop Now'),
                             ),
                           ],

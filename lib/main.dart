@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:nana/core/routes/app_routes.dart';
 import 'package:nana/core/services/api_service.dart';
+import 'package:nana/features/address/bloc/address_bloc.dart';
+
+import 'package:nana/features/address/repositories/address_repository.dart';
 import 'package:nana/features/auth/bloc/auth_bloc.dart';
 import 'package:nana/features/auth/repositories/auth_repositories.dart';
 import 'package:nana/features/cart/bloc/cart_bloc.dart';
@@ -10,6 +14,8 @@ import 'package:nana/features/product/bloc/product_bloc.dart';
 import 'package:nana/features/product/bloc/product_event.dart';
 import 'package:nana/features/product/repositories/proudct_repository.dart';
 import 'package:nana/features/services/local_notification_service.dart';
+import 'package:nana/features/setting/screens/bloc/setting_bloc.dart';
+import 'package:nana/features/setting/screens/setting_screen.dart';
 import 'package:nana/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -36,11 +42,24 @@ void main() async {
       providers: [
         // auth
         BlocProvider(
-          create: (_) => AuthBloc(AuthRepositories(FirebaseAuth.instance)),
+          create: (_) => AuthBloc(
+            AuthRepositories(FirebaseAuth.instance, FirebaseFirestore.instance),
+          ),
         ),
+        BlocProvider(
+          create: (_) => AddressBloc(
+            AddressRepository(
+              FirebaseFirestore.instance,
+              FirebaseAuth.instance,
+            ),
+          ),
+        ),
+        BlocProvider(create: (_) => SettingsBloc(), child: SettingsScreen()),
         // Cart BLoC
         BlocProvider(
-          create: (context) => CartBloc(CartRepositories())..add(LoadCart()),
+          create: (context) => CartBloc(
+            CartRepositories(FirebaseFirestore.instance, FirebaseAuth.instance),
+          )..add(LoadCart()),
         ),
 
         // Product BLoC

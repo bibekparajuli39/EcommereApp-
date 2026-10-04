@@ -123,15 +123,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       icon: Icons.location_on_outlined,
                       title: 'Address',
                       subtitle: 'Manage your delivery address',
-                      onTap: () {},
+                      onTap: () {
+                        context.push(Routes.address);
+                      },
                     ),
 
                     profileMenu(
-                      icon: Icons.shopping_bag_outlined,
-                      title: 'My Orders',
-                      subtitle: 'View your orders',
+                      icon: Icons.settings_outlined,
+                      title: 'Settings',
+                      subtitle: 'Manage your app settings',
                       onTap: () {
-                        // context.push(Routes.order);
+                        context.push(Routes.setting);
                       },
                     ),
 

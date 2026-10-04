@@ -40,7 +40,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  backgroundColor: primaryColor,
+                  backgroundColor: Colors.green.shade600,
                   duration: Duration(seconds: 2),
                   behavior: SnackBarBehavior.floating,
                   margin: EdgeInsets.all(16),

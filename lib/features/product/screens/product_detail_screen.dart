@@ -1,4 +1,6 @@
+import 'package:go_router/go_router.dart';
 import 'package:nana/core/constants/theme_color.dart';
+import 'package:nana/core/routes/route.dart';
 
 import 'package:nana/features/cart/bloc/cart_bloc.dart';
 import 'package:nana/features/cart/bloc/cart_event.dart';
@@ -6,6 +8,7 @@ import 'package:nana/features/product/models/product/datum.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nana/features/services/local_notification_service.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final Datum product;
@@ -22,7 +25,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.product.title.toString(),
+          'Details',
           style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
@@ -30,7 +33,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          margin: EdgeInsets.all(20),
+          margin: EdgeInsets.only(left: 20, right: 20),
           child: Column(
             crossAxisAlignment: .start,
             children: [
@@ -42,27 +45,59 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     Center(
                       child: Hero(
                         tag: 'Product-${widget.product.id}',
-                        child: Image.network(
-                          widget.product.image.toString(),
-                          height: 200,
+                        child: ClipRRect(
+                          borderRadius: BorderRadiusGeometry.circular(12),
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: MediaQuery.of(context).size.width * 0.8,
+                            child: Image.network(
+                              widget.product.image.toString(),
+                              height: 200,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
                       ),
                     ),
+                    Text(
+                      widget.product.title.toString(),
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
 
                     Text(
-                      '\$${widget.product.price?.toStringAsFixed(0)}.',
+                      'Rs.${widget.product.price?.toStringAsFixed(0)}',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
                       ),
                     ),
                     Row(
+                      mainAxisAlignment: .spaceBetween,
                       spacing: 5,
                       children: [
-                        Icon(Icons.star, color: Colors.orange),
-                        Text('${widget.product.rating}'),
-                        // ${widget.product.rating!.count}
-                        Text('(review)'),
+                        Row(
+                          spacing: 5,
+                          children: [
+                            Icon(Icons.star, color: Colors.orange),
+                            Text('${widget.product.rating}'),
+                            // ${widget.product.rating!.count}
+                            Text('(review)'),
+                          ],
+                        ),
+
+                        Text(
+                          'In Stock: ${widget.product.stock}',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.green,
+                          ),
+                        ),
                       ],
                     ),
 
@@ -181,18 +216,32 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       child: SizedBox(
                         height: 52,
                         child: ElevatedButton(
-                          onPressed: () {
+                          onPressed: () async {
                             context.read<CartBloc>().add(
                               AddToCart(widget.product, quantity: quantity),
                             );
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                backgroundColor: ThemeColor.primaryColor,
+                                backgroundColor: Colors.green.shade600,
+                                behavior: SnackBarBehavior.floating,
+                                duration: Duration(seconds: 2),
                                 content: Text(
                                   'Successfully Added to Cart',
                                   style: TextStyle(color: Colors.white),
                                 ),
                               ),
+                            );
+                            Future.delayed(Duration(seconds: 2), () {
+                              if (context.mounted) {
+                                context.push(Routes.cart);
+                              }
+                            });
+                            savePendingCartProduct(
+                              productName: widget.product.title.toString(),
+                            );
+                            await scheduleCartNotification(
+                              productName:
+                                  widget.product.title ?? 'Your product',
                             );
                           },
                           style: ElevatedButton.styleFrom(
