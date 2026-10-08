@@ -98,14 +98,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                   fit: BoxFit.cover,
                                   memCacheWidth: 500,
                                   maxWidthDiskCache: 800,
-                                  placeholder: (context, url) {
-                                    return Center(
-                                      child: CircularProgressIndicator(
-                                        color: ThemeColor.primaryColor,
-                                        strokeWidth: 2,
-                                      ),
-                                    );
-                                  },
+
                                   errorWidget: (context, url, error) {
                                     return Container(
                                       color: Colors.grey.shade200,

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
 import 'package:nana/core/constants/theme_color.dart';
 import 'package:nana/core/routes/route.dart';
@@ -50,8 +51,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           child: SizedBox(
                             width: double.infinity,
                             height: MediaQuery.of(context).size.width * 0.8,
-                            child: Image.network(
-                              widget.product.image.toString(),
+                            child: CachedNetworkImage(
+                              imageUrl: widget.product.image.toString(),
                               height: 200,
                               fit: BoxFit.cover,
                             ),

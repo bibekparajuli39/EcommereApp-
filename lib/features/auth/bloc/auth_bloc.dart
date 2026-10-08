@@ -20,7 +20,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           emit(AuthError("Google Login failed"));
         }
       } catch (e) {
-        print('GOOGLE LOGIN ERROR: $e');
+        print('google login error: $e');
 
         emit(AuthError(e.toString()));
       }
